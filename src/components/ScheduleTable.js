@@ -198,6 +198,9 @@ const ScheduleTable = () => {
                       padding: '2px',
                       border: '1px solid black',
                       cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '#005f00', // Color verde oscuro 
+                        }
                     }}
                     onClick={(e) => handleOpenPopover(e, time, '1')}
                   >
@@ -215,6 +218,9 @@ const ScheduleTable = () => {
                       padding: '2px',
                       border: '1px solid black',
                       cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '#005f00', // Color verde oscuro 
+                        }
                     }}
                     onClick={(e) => handleOpenPopover(e, time, '2')}
                   >
