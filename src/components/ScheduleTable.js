@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import DatePicker from 'react-datepicker';
+import Tooltip from '@mui/material/Tooltip';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
   Typography,
@@ -200,54 +201,78 @@ const ScheduleTable = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {times.map((time) => (
-                    <TableRow key={time}>
-                      <TableCell sx={{ backgroundColor: '#343a40', color: '#fff', textAlign: 'center', padding: '2px', border: '1px solid black' }}>
-                        {time}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          backgroundColor: reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`] 
-                            ? (reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`].type === 'reservada_eventual' ? '#ffc107' : '#155724') 
-                            : '#28a745',
-                          color: '#000',
-                          textAlign: 'center',
-                          padding: '2px',
-                          border: '1px solid black',
-                          cursor: 'pointer',
-                          '&:hover': {
-                            backgroundColor: '#005f00',
-                          }
-                        }}
-                        onClick={(e) => handleOpenPopover(e, time, '1')}
-                      >
-                        {reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`]
-                          ? `${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`].name} (${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`].type === 'reservada_eventual' ? 'Eventual' : 'Fijo'})`
-                          : 'Disponible'}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          backgroundColor: reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`] 
-                            ? (reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`].type === 'reservada_eventual' ? '#ffc107' : '#155724') 
-                            : '#28a745',
-                          color: '#000',
-                          textAlign: 'center',
-                          padding: '2px',
-                          border: '1px solid black',
-                          cursor: 'pointer',
-                          '&:hover': {
-                            backgroundColor: '#005f00',
-                          }
-                        }}
-                        onClick={(e) => handleOpenPopover(e, time, '2')}
-                      >
-                        {reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`]
-                          ? `${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`].name} (${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`].type === 'reservada_eventual' ? 'Eventual' : 'Fijo'})`
-                          : 'Disponible'}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+  {times.map((time) => (
+    <TableRow key={time}>
+      <TableCell sx={{ backgroundColor: '#343a40', color: '#fff', textAlign: 'center', padding: '2px', border: '1px solid black' }}>
+        {time}
+      </TableCell>
+      
+      <Tooltip title="Haga click y reserve" placement="top" arrow   PopperProps={{
+          modifiers: [
+            {
+              name: 'offset',
+              options: {
+                offset: [100, 0], // Ajusta estos valores para mover el tooltip (x, y)
+              },
+            },
+          ],
+        }}>
+        <TableCell
+          sx={{
+            backgroundColor: reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`] 
+              ? (reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`].type === 'reservada_eventual' ? '#ffc107' : '#155724') 
+              : '#28a745',
+            color: '#000',
+            textAlign: 'center',
+            padding: '2px',
+            border: '1px solid black',
+            cursor: 'pointer',
+            '&:hover': {
+              backgroundColor: '#005f00',
+            }
+          }}
+          onClick={(e) => handleOpenPopover(e, time, '1')}
+        >
+          {reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`]
+            ? `${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`].name} (${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`].type === 'reservada_eventual' ? 'Eventual' : 'Fijo'})`
+            : 'Disponible'}
+        </TableCell>
+      </Tooltip>
+
+      <Tooltip title="Haga click y reserve" placement="top" arrow   PopperProps={{
+          modifiers: [
+            {
+              name: 'offset',
+              options: {
+                offset: [100, 0], // Ajusta estos valores para mover el tooltip (x, y)
+              },
+            },
+          ],
+        }}>
+        <TableCell
+          sx={{
+            backgroundColor: reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`] 
+              ? (reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`].type === 'reservada_eventual' ? '#ffc107' : '#155724') 
+              : '#28a745',
+            color: '#000',
+            textAlign: 'center',
+            padding: '2px',
+            border: '1px solid black',
+            cursor: 'pointer',
+            '&:hover': {
+              backgroundColor: '#005f00',
+            }
+          }}
+          onClick={(e) => handleOpenPopover(e, time, '2')}
+        >
+          {reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`]
+            ? `${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`].name} (${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`].type === 'reservada_eventual' ? 'Eventual' : 'Fijo'})`
+            : 'Disponible'}
+        </TableCell>
+      </Tooltip>
+    </TableRow>
+  ))}
+</TableBody>
               </Table>
             </TableContainer>
 
