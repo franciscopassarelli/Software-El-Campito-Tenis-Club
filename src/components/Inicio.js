@@ -25,11 +25,37 @@ const Inicio = () => {
         justifyContent: 'center',
         minHeight: '100vh',
         backgroundColor: '#1e1e1e',
-        paddingTop: { xs: '50px', md: '90px' }, // Ajustar padding en móviles
+        paddingTop: { xs: '50px', md: '90px' },
         paddingBottom: 10,
-        textAlign: 'center', // Centrar texto
+        textAlign: 'center',
       }}
     >
+         <Box 
+  sx={{ 
+    textAlign: 'center', 
+    marginBottom: '20px',
+    background: 'linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0))', // Degradado invertido
+    padding: '10px', // Espaciado alrededor del logo
+    borderRadius: '50%', // Hace que el fondo sea redondo
+    width: '320px', // Ancho del fondo (puedes ajustar según sea necesario)
+    height: '320px', // Alto del fondo (puedes ajustar según sea necesario)
+    display: 'flex', // Para centrar la imagen
+    justifyContent: 'center', // Centrar horizontalmente
+    alignItems: 'center' // Centrar verticalmente
+  }}
+>
+  <img 
+    src="/images/elcampito1.png" 
+    alt="Logo" 
+    style={{ 
+      width: '400px', // Ancho fijo
+      height: '400px', // Alto fijo para mantener la proporción
+      borderRadius: '50%', // Esto hará la imagen redonda
+      objectFit: 'contain' // Esto asegurará que toda la imagen se muestre sin recortes
+    }} 
+  />
+</Box>
+
       <Typography
         variant="h3"
         gutterBottom
@@ -60,7 +86,7 @@ const Inicio = () => {
           mb: 4,
           transition: 'opacity 0.5s',
           opacity: 1,
-          padding: '0 20px', // Padding lateral para móviles
+          padding: '0 20px',
         }}
       >
         {texts[currentTextIndex].message}

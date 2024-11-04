@@ -15,7 +15,9 @@ import {
   Popover,
   Button,
   Box,
+  IconButton,
 } from '@mui/material';
+import { EventAvailable, EventBusy, Delete } from '@mui/icons-material';
 
 const ScheduleTable = () => {
   const today = new Date();
@@ -24,6 +26,7 @@ const ScheduleTable = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedCourt, setSelectedCourt] = useState('');
+  const [userName, setUserName] = useState('');
 
   const times = Array.from({ length: 33 }, (_, i) => {
     const hour = Math.floor(i / 2) + 8;
@@ -50,6 +53,7 @@ const ScheduleTable = () => {
     setAnchorEl(event.currentTarget);
     setSelectedTime(time);
     setSelectedCourt(court);
+    setUserName('');
   };
 
   const handleClosePopover = () => {
@@ -58,10 +62,17 @@ const ScheduleTable = () => {
 
   const handleReservation = (type) => {
     const key = `${format(currentDay, 'dd-MM-yyyy')}_${selectedTime}_${selectedCourt}`;
-    const updatedReservations = {
-      ...reservations,
-      [key]: type,
-    };
+    const updatedReservations = { ...reservations };
+
+    if (type === 'disponible') {
+      delete updatedReservations[key];
+    } else {
+      updatedReservations[key] = {
+        type: type,
+        name: userName || 'Anónimo',
+      };
+    }
+
     setReservations(updatedReservations);
     saveReservations(updatedReservations);
     handleClosePopover();
@@ -72,7 +83,37 @@ const ScheduleTable = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, padding: '20px', backgroundColor: '#2f2f2f', paddingTop: '80px' }}>
-      <Box sx={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: { xs: '20px', md: '0' } }}>
+      {/* Sección del logo y calendario */}
+      <Box sx={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginBottom: { xs: '20px', md: '0' } }}>
+      <Box 
+  sx={{ 
+    textAlign: 'center', 
+    marginBottom: '20px',
+    background: 'linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0))', // Degradado invertido
+    padding: '10px', // Espaciado alrededor del logo
+    borderRadius: '50%', // Hace que el fondo sea redondo
+    width: '220px', // Ancho del fondo (puedes ajustar según sea necesario)
+    height: '220px', // Alto del fondo (puedes ajustar según sea necesario)
+    display: 'flex', // Para centrar la imagen
+    justifyContent: 'center', // Centrar horizontalmente
+    alignItems: 'center' // Centrar verticalmente
+  }}
+>
+  <img 
+    src="/images/elcampito1.png" 
+    alt="Logo" 
+    style={{ 
+      width: '200px', // Ancho fijo
+      height: '200px', // Alto fijo para mantener la proporción
+      borderRadius: '50%', // Esto hará la imagen redonda
+      objectFit: 'contain' // Esto asegurará que toda la imagen se muestre sin recortes
+    }} 
+  />
+</Box>
+
+
+
+
         <Box>
           <Typography variant="h5" align="center" gutterBottom sx={{ color: '#fff' }}>
             Selecciona un día
@@ -88,7 +129,23 @@ const ScheduleTable = () => {
         </Box>
       </Box>
 
+      {/* Sección de la tabla */}
       <Box sx={{ flex: '3' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
+          <Box sx={{ textAlign: 'center', color: '#fff' }}>
+            <IconButton sx={{ color: '#ffc107' }}><EventAvailable /></IconButton>
+            <Typography variant="body2">Alquilar Eventual</Typography>
+          </Box>
+          <Box sx={{ textAlign: 'center', color: '#fff' }}>
+            <IconButton sx={{ color: '#155724' }}><EventBusy /></IconButton>
+            <Typography variant="body2">Alquilar Fijo</Typography>
+          </Box>
+          <Box sx={{ textAlign: 'center', color: '#fff' }}>
+            <IconButton sx={{ color: '#dc3545' }}><Delete /></IconButton>
+            <Typography variant="body2">Eliminar Reserva</Typography>
+          </Box>
+        </Box>
+
         <Typography
           variant="h5"
           align="center"
@@ -133,12 +190,9 @@ const ScheduleTable = () => {
                   </TableCell>
                   <TableCell
                     sx={{
-                      backgroundColor:
-                        reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`] === 'reservada_eventual'
-                          ? '#ffc107'
-                          : reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`] === 'reservada_fijo'
-                          ? '#155724'
-                          : '#28a745',
+                      backgroundColor: reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`] 
+                        ? (reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`].type === 'reservada_eventual' ? '#ffc107' : '#155724') 
+                        : '#28a745',
                       color: '#000',
                       textAlign: 'center',
                       padding: '2px',
@@ -147,20 +201,15 @@ const ScheduleTable = () => {
                     }}
                     onClick={(e) => handleOpenPopover(e, time, '1')}
                   >
-                    {reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`] === 'reservada_eventual'
-                      ? 'Reservada (Eventual)'
-                      : reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`] === 'reservada_fijo'
-                      ? 'Reservada (Fijo)'
+                    {reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`]
+                      ? `${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`].name} (${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_1`].type === 'reservada_eventual' ? 'Eventual' : 'Fijo'})`
                       : 'Disponible'}
                   </TableCell>
                   <TableCell
                     sx={{
-                      backgroundColor:
-                        reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`] === 'reservada_eventual'
-                          ? '#ffc107'
-                          : reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`] === 'reservada_fijo'
-                          ? '#155724'
-                          : '#28a745',
+                      backgroundColor: reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`] 
+                        ? (reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`].type === 'reservada_eventual' ? '#ffc107' : '#155724') 
+                        : '#28a745',
                       color: '#000',
                       textAlign: 'center',
                       padding: '2px',
@@ -169,10 +218,8 @@ const ScheduleTable = () => {
                     }}
                     onClick={(e) => handleOpenPopover(e, time, '2')}
                   >
-                    {reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`] === 'reservada_eventual'
-                      ? 'Reservada (Eventual)'
-                      : reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`] === 'reservada_fijo'
-                      ? 'Reservada (Fijo)'
+                    {reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`]
+                      ? `${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`].name} (${reservations[`${format(currentDay, 'dd-MM-yyyy')}_${time}_2`].type === 'reservada_eventual' ? 'Eventual' : 'Fijo'})`
                       : 'Disponible'}
                   </TableCell>
                 </TableRow>
@@ -199,6 +246,13 @@ const ScheduleTable = () => {
             <Typography variant="h6" gutterBottom>
               Elige el tipo de reserva:
             </Typography>
+            <input
+              type="text"
+              placeholder="Nombre"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              style={{ marginBottom: '10px', width: '100%', padding: '5px' }}
+            />
             <Button
               variant="contained"
               color="warning"

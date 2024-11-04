@@ -3,6 +3,8 @@ import { Box, Typography, Button, Grid } from '@mui/material';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+
+
 const ItemTypes = {
   PLAYER: 'player',
 };
@@ -63,18 +65,27 @@ const DraggablePlayer = ({ player, index, isDropped }) => {
 
   return (
     <Box
-      ref={ref}
-      sx={{
-        p: 1,
-        m: 1,
-        minWidth: '120px',
-        opacity: isDragging ? 0.5 : 1,
-        backgroundColor: isDropped ? 'lightgray' : 'lightblue', // Cambia el color si ya fue colocado
-        cursor: isDropped ? 'not-allowed' : 'pointer',
-      }}
-    >
-      {player}
-    </Box>
+    ref={ref}
+    sx={{
+      p: 1,
+      m: 1,
+      minWidth: '50px',
+      borderRadius: '30px',
+      opacity: isDragging ? 0.5 : 1,
+      backgroundColor: isDropped ? 'lightgray' : 'lightblue',
+      cursor: isDropped ? 'not-allowed' : 'pointer',
+      transition: 'background-color 1s, border-color 1s', // Suaviza el cambio de color
+      border: '4px solid black', // Borde negro
+      '&:hover': {
+        backgroundColor: 'black', // Cambia el fondo a negro al hacer hover
+        color: 'white', // Cambia el texto a blanco para que sea legible
+      },
+    }}
+  >
+    {player}
+  </Box>
+  
+
   );
 };
 
@@ -246,6 +257,8 @@ const TournamentBracket = ({ players }) => {
     setChampion(null);
   };
 
+ 
+
   const bracketStructure = createBracketStructure();
 
   return (
@@ -254,7 +267,7 @@ const TournamentBracket = ({ players }) => {
       <Grid container spacing={2}>
         {/* Columna de selección de jugadores */}
         <Grid item xs={12} md={4}>
-          <Box sx={{ p: 2, border: '1px solid gray', borderRadius: '8px', height: '100%' }}>
+          <Box sx={{ p: 2, border: '3px solid black', borderRadius: '8px', height: '100%' }}>
             <Typography variant="h6" align="center" gutterBottom>
               Selecciona tus jugadores
             </Typography>
@@ -263,20 +276,23 @@ const TournamentBracket = ({ players }) => {
                 display: 'flex',
                 flexWrap: 'wrap',
                 overflowY: 'auto', // Permitir scroll vertical
-                height: '400px', // Ajusta la altura como desees
+                height: '300px', // Ajusta la altura como desees
                 alignItems: 'center',
                 justifyContent: 'center',
+                border: '2px solid gray', // Cambia 'yourBorderColor' por el color que desees
+                borderRadius: '10px',
               }}
             >
               {players.filter((player) => player.inTournament).map((player, idx) => {
-                const playerName = `${player.name} ${player.lastName}`;
-                return (
-                  <Box key={idx} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                    <DraggablePlayer
-                      player={playerName}
-                      isDropped={isPlayerAdded(playerName)}
-                    />
-                    {idx % 2 !== 0 && <Box sx={{ width: '20px' }} />} {/* Espacio entre filas */}
+  const playerName = `${player.name} ${player.lastName}`;
+  return (
+  
+    <Box key={idx} sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%', mb: 1, }}>
+      <DraggablePlayer
+        player={playerName}
+        isDropped={isPlayerAdded(playerName)}
+      />
+      
                   </Box>
                   
                 );
@@ -284,7 +300,7 @@ const TournamentBracket = ({ players }) => {
               
             </Box>
              {/* Botón para añadir jugadores aleatoriamente */}
-           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+           <Box sx={{ display: 'flex', justifyContent: 'center', mt:2 }}>
               <Button onClick={addPlayersRandomly} variant="contained" color="primary">
                 Añadir Jugadores Aleatoriamente
               </Button>
